@@ -110,14 +110,16 @@ export function generateJSX(
     isRoot = true // 是否为第一行
 ): string {
     // 第一行不加 baseIndent，其他行加
-    const indentStr = isRoot ? '' : baseIndent + '  '.repeat(indent);
+    const indentStr = isRoot ? baseIndent : baseIndent + '  '.repeat(indent);
 
     if (node.tag === '__root__' && node.children) {
+        // 顶层多个兄弟节点
         return node.children
-            .map((c, i) => generateJSX(c, cssPrefix, indent, baseIndent, i === 0))
+            .map((c, i) => i === 0 ? generateJSX(c, cssPrefix, indent, baseIndent, i === 0) : generateChildrenJSX(c, cssPrefix, indent, baseIndent, false))
             .join('\n');
     }
 
+    // 构造属性
     const attrs: string[] = [];
     if (node.id) attrs.push(`id="${node.id}"`);
     if (node.classes?.length) {
@@ -128,15 +130,63 @@ export function generateJSX(
             attrs.push(`className={\`${expr}\`}`);
         }
     }
-
     const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
     const hasChildren = node.children && node.children.length > 0;
 
     if (hasChildren) {
+        // 递归生成子节点
         const inner = node.children!
-            .map((c, i) => generateJSX(c, cssPrefix, indent + 1, baseIndent, false))
+            .map((c, i) => generateChildrenJSX(c, cssPrefix, indent + 1, baseIndent, false))
             .join('\n');
-        return `${indentStr}<${node.tag}${attrStr}>\n${inner}\n${baseIndent}</${node.tag}>`;
+
+        // ✅ 闭合标签与开标签同缩进（使用 indentStr，而不是 baseIndent）
+        return `<${node.tag}${attrStr}>\n${inner}\n${indentStr}</${node.tag}>`;
+    } else {
+        if (node.text) {
+            return `<${node.tag}${attrStr}>${escapeText(node.text)}</${node.tag}>`;
+        }
+        return `<${node.tag}${attrStr}></${node.tag}>`;
+    }
+}
+function generateChildrenJSX(
+    node: Node,
+    cssPrefix = 'css',
+    indent = 0,
+    baseIndent = '',
+    isRoot = true // 是否为第一行
+): string {
+    // 第一行不加 baseIndent，其他行加
+    const indentStr = isRoot ? baseIndent : baseIndent + '  '.repeat(indent);
+
+    if (node.tag === '__root__' && node.children) {
+        // 顶层多个兄弟节点
+        return node.children
+            .map((c, i) => generateChildrenJSX(c, cssPrefix, indent, baseIndent, i === 0))
+            .join('\n');
+    }
+
+    // 构造属性
+    const attrs: string[] = [];
+    if (node.id) attrs.push(`id="${node.id}"`);
+    if (node.classes?.length) {
+        if (node.classes.length === 1) {
+            attrs.push(`className={${cssPrefix}.${node.classes[0]}}`);
+        } else {
+            const expr = node.classes.map(c => `\${${cssPrefix}.${c}}`).join(' ');
+            attrs.push(`className={\`${expr}\`}`);
+        }
+    }
+    const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
+    const hasChildren = node.children && node.children.length > 0;
+
+    if (hasChildren) {
+        // 递归生成子节点
+        const inner = node.children!
+            .map((c, i) => generateChildrenJSX(c, cssPrefix, indent + 1, baseIndent, false))
+            .join('\n');
+
+        // ✅ 闭合标签与开标签同缩进（使用 indentStr，而不是 baseIndent）
+        return `${indentStr}<${node.tag}${attrStr}>\n${inner}\n${indentStr}</${node.tag}>`;
     } else {
         if (node.text) {
             return `${indentStr}<${node.tag}${attrStr}>${escapeText(node.text)}</${node.tag}>`;
@@ -144,4 +194,3 @@ export function generateJSX(
         return `${indentStr}<${node.tag}${attrStr}></${node.tag}>`;
     }
 }
-
