@@ -28,7 +28,7 @@
    <div className={css.box}><p className={css.text}>Hello</p></div>
    ```
 
-![演示效果](images/shiyong.gif)
+![演示效果](https://github.com/zcyioi/CssModuleEmmet/blob/main/images/shiyong.gif?raw=true)
 
 ---- 
 
