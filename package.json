@@ -2,7 +2,7 @@
   "name": "cssmoduleemmet",
   "displayName": "CssModuleEmmet",
   "description": "dic.wrap  -->  <div className={css.wrap}/>",
-  "version": "0.0.1",
+  "version": "1.0",
   "publisher": "zhangchengyun",
   "engines": {
     "vscode": "^1.105.0"
