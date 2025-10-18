@@ -24,11 +24,13 @@
    ```
 2. 按下 **Tab** 键自动展开为：
 
-   ```jsx
+   ```html
    <div className={css.box}><p className={css.text}>Hello</p></div>
    ```
 
----
+![演示效果](images/shiyong.gif)
+
+---- 
 
 ## 🧩 配置项
 
