@@ -48,7 +48,9 @@ export function activate(context: vscode.ExtensionContext) {
 					previewItem.detail = 'Css Module Emmet';
 					previewItem.sortText = '\u0000'; // 让它排在最前
 					previewItem.filterText = token; // 跟当前输入一致
-					previewItem.insertText = ''; // 不插入任何文字，只是预览
+					previewItem.insertText = jsx; // entry 补齐
+					// ✅ 替换当前输入的范围
+					previewItem.range = range;
 
 					// ✅ 返回动态补全列表（Emmet 同款）
 					// 第二个参数 true 表示“补全不完整”，允许动态刷新
@@ -60,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 		},
 		// ✅ 触发字符
-		'.', '>', '+'
+		'',
 	);
 
 	context.subscriptions.push(previewProvider);
