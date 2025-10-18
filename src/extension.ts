@@ -6,65 +6,64 @@ function getPrefix(): string {
 	return (cfg.get('cssPrefix') as string) || 'css';
 }
 
-let latestPreview = '';
-let suggestVisible = false;
-let lastTriggerTime = 0;
-
 export function activate(context: vscode.ExtensionContext) {
 
-	// // ----------------------------
-	// // ② 补全预览（原功能）
-	// // ----------------------------
-	// const previewProvider = vscode.languages.registerCompletionItemProvider(
-	// 	[
-	// 		{language: 'typescriptreact'},
-	// 		{language: 'javascriptreact'},
-	// 		{language: 'html'},
-	// 		{language: 'javascript'},
-	// 		{language: 'typescript'},
-	// 	],
-	// 	{
+	// ----------------------------
+	// ② 补全预览（原功能）
+	// ----------------------------
+	const previewProvider = vscode.languages.registerCompletionItemProvider(
+		[
+			{language: 'typescriptreact'},
+			{language: 'javascriptreact'}
+		],
+		{
+			provideCompletionItems(document, position) {
+				const range = document.getWordRangeAtPosition(position, /[a-zA-Z0-9.#>{}_+\-:]+/);
+				if (!range) return undefined;
 
-	// 		provideCompletionItems(document, position) {
-	// 			console.log("provider");
-	// 			const range = document.getWordRangeAtPosition(position, /[a-zA-Z0-9.#>{}_+\-:]+/);
-	// 			console.log("range:", range)
-	// 			if (!range) return undefined;
+				const token = document.getText(range);
+				// 可选：仅在包含符号时触发
+				// if (!/[.>{+{]/.test(token)) return undefined;
 
-	// 			const token = document.getText(range);
-	// 			// if (!/[.>{+{]/.test(token)) return undefined;
+				try {
+					const ast = parseShorthand(token);
+					if (!ast) return undefined;
 
-	// 			try {
-	// 				const ast = parseShorthand(token);
-	// 				if (!ast) return undefined;
-	// 				const cssPrefix = getPrefix();
-	// 				const jsx = generateJSX(ast, cssPrefix);
-	// 				console.log("jsx:", jsx)
+					const cssPrefix = getPrefix(); // 例如返回 'css'
+					const jsx = generateJSX(ast, cssPrefix);
 
-	// 				// ✅ “预览项”类型的补全条目
-	// 				const previewItem = new vscode.CompletionItem('JSX Preview', vscode.CompletionItemKind.Text);
-	// 				const md = new vscode.MarkdownString();
-	// 				md.appendMarkdown('**Preview:**\n\n```jsx\n' + jsx + '\n```');
-	// 				md.isTrusted = true;
-	// 				previewItem.documentation = md;
-	// 				previewItem.detail = 'Preview JSX output';
-	// 				previewItem.sortText = '\u0000'; // 保证永远排最前
-	// 				previewItem.filterText = token; // 匹配当前输入
-	// 				previewItem.insertText = ''; // 不插入内容（只是预览）
+					// ✅ 创建预览补全项
+					const previewItem = new vscode.CompletionItem(
+						token,
+						vscode.CompletionItemKind.Snippet
+					);
 
-	// 				return [previewItem];
-	// 			} catch (e) {
-	// 				console.log("error", e)
-	// 				return undefined;
-	// 			}
-	// 		},
-	// 	},
-	// 	// ✅ 触发字符
-	// 	'.', '>', '+'
-	// );
+					// Markdown 预览内容
+					const md = new vscode.MarkdownString();
+					md.appendMarkdown('```jsx\n' + jsx + '\n```');
+					md.isTrusted = true;
+					previewItem.documentation = md;
 
-	// context.subscriptions.push(previewProvider);
+					// 显示细节说明
+					previewItem.detail = 'Css Module Emmet';
+					previewItem.sortText = '\u0000'; // 让它排在最前
+					previewItem.filterText = token; // 跟当前输入一致
+					previewItem.insertText = ''; // 不插入任何文字，只是预览
 
+					// ✅ 返回动态补全列表（Emmet 同款）
+					// 第二个参数 true 表示“补全不完整”，允许动态刷新
+					return new vscode.CompletionList([previewItem], true);
+				} catch (e) {
+					console.error('Error in JSX preview provider:', e);
+					return undefined;
+				}
+			},
+		},
+		// ✅ 触发字符
+		'.', '>', '+'
+	);
+
+	context.subscriptions.push(previewProvider);
 	// ----------------------------
 	// ① Tab 展开命令（原功能）
 	// ----------------------------
@@ -123,34 +122,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	context.subscriptions.push(disposable);
 
-
-
-	// vscode.workspace.onDidChangeTextDocument((event) => {
-
-	// 	console.log("change")
-	// 	const editor = vscode.window.activeTextEditor;
-	// 	if (!editor || event.document !== editor.document) return;
-
-	// 	const lang = editor.document.languageId;
-	// 	if (!['typescriptreact', 'javascriptreact', 'html', 'typescript', 'javascript'].includes(lang)) return;
-
-	// 	const change = event.contentChanges[0];
-	// 	if (!change || !change.text) return;
-	// 	const char = change.text;
-
-	// 	if (/^[a-zA-Z0-9.#>{}_+\-:]$/.test(char)) {
-	// 		// 💡 1. 关闭当前补全
-	// 		vscode.commands.executeCommand('hideSuggestWidget').then(() => {
-	// 			// 💡 2. 下一帧再重新打开（强制触发 provider）
-	// 			setTimeout(() => {
-	// 				vscode.commands.executeCommand('editor.action.triggerSuggest');
-	// 			}, 10); // 稍微延迟一点以确保输入状态稳定
-	// 		});
-	// 	}
-	// });
-
 }
-
 // ----------------------------
 // 辅助函数：插入 Tab
 // ----------------------------
@@ -184,7 +156,6 @@ function findCursorAfterFirstOpenTag(
 		return null;
 	}
 }
-
 
 export function deactivate() {
 }
