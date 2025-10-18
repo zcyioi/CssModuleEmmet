@@ -10,4 +10,5 @@ vsc-extension-quickstart.md
 **/*.ts
 **/.vscode-test.*
 images/*
+!images/icon.png
 pnpm-lock.yaml
