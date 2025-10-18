@@ -62,7 +62,7 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 		},
 		// ✅ 触发字符
-		'',
+		'.', '>', '+',
 	);
 
 	context.subscriptions.push(previewProvider);

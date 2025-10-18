@@ -1,9 +1,9 @@
 {
   "name": "cssmoduleemmet",
   "displayName": "CssModuleEmmet",
-  "description": "dic.wrap-> <div className={css.wrap}/>",
+  "description": "dic.wrap  -->  <div className={css.wrap}/>",
   "version": "0.0.1",
-  "publisher": "zcy",
+  "publisher": "zhangchengyun",
   "engines": {
     "vscode": "^1.105.0"
   },
