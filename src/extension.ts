@@ -7,7 +7,6 @@ function getPrefix(): string {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-
 	// ----------------------------
 	// ② 补全预览（原功能）
 	// ----------------------------

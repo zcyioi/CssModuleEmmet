@@ -5,7 +5,7 @@
 在 React / TSX 文件中通过 Emmet 风格语法快速生成带 className={css.xxx} 的代码结构
 
 
-## 🚀 功能介绍
+## 功能介绍
 
 | 输入                    | 展开结果                                                                |
 | ----------------------- | ----------------------------------------------------------------------- |
@@ -15,14 +15,14 @@
 | `h1#main.title{Hello}`  | `<h1 id="main" className={css.title}>Hello</h1>`                        |
 ---
 
-## ⚙️ 使用
+## 使用
 
 1. 在任意 **JSX / TSX 文件** 中输入简写：
 
    ```
    div.box>p.text{Hello}
    ```
-2. 按下 **Tab** 键自动展开为：
+2. 按下 **alt+'** 键自动展开为：
 
    ```html
    <div className={css.box}><p className={css.text}>Hello</p></div>
@@ -32,13 +32,13 @@
 
 ---- 
 
-## 🧩 配置项
+## 配置项
 
 在 VS Code `settings.json` 中添加：
 
 ```json
 {
-  "myEmmet.cssPrefix": "styles" // default :css
+  "cssModuleEmmet.cssPrefix": "styles" // default :css
 }
 ```
 
@@ -48,7 +48,7 @@
 div.content → <div className={styles.content}></div>
 ```
 
-## 🧠 支持语法说明
+## 支持语法说明
 
 | 语法 | 示例       | 说明           |
 | ---- | ---------- | -------------- |
@@ -65,10 +65,28 @@ div.content → <div className={styles.content}></div>
 
 ---
 
-## 💡 快捷键说明
+## 快捷键说明
 
-| 快捷键  | 功能                | 适用范围     |
-| ------- | ------------------- | ------------ |
-| **Tab** | 展开缩写为 JSX 结构 | `jsx`, `tsx` |
+1. 默认快捷键
+
+| 快捷键    | 功能                | 适用范围     |
+| --------- | ------------------- | ------------ |
+| **alt+'** | 展开缩写为 JSX 结构 | `jsx`, `tsx` |
 
 
+2. 自定义快捷键
+   1. 打开命令面板：
+
+      Windows / Linux：Ctrl + Shift + P
+      macOS：Cmd + Shift + P
+      输入 “Keyboard Shortcuts (JSON)” 或 “键盘快捷方式 (JSON)”，然后回车。
+
+   2. 添加自定义快捷键，例如：
+
+   ```json
+   {
+    "key": "tab",
+    "command": "cssModuleEmmet.expand",
+    "when": "editorTextFocus && editorLangId =~ /^(javascriptreact|typescriptreact)$/"
+   }
+   ```

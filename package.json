@@ -6,7 +6,7 @@
   "icon": "images/icon.png",
   "publisher": "zhangchengyun",
   "engines": {
-    "vscode": "^1.105.0"
+    "vscode": "^1.100.0"
   },
   "categories": [
     "Other"
@@ -37,7 +37,7 @@
     "keybindings": [
       {
         "command": "cssModuleEmmet.expand",
-        "key": "tab",
+        "key": "alt+'",
         "when": "editorTextFocus && editorLangId =~ /^(javascriptreact|typescriptreact)$/"
       }
     ]
