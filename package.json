@@ -2,7 +2,7 @@
   "name": "cssmoduleemmet",
   "displayName": "CssModuleEmmet",
   "description": "dic.wrap  -->  <div className={css.wrap}/>",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "icon": "images/icon.png",
   "publisher": "zhangchengyun",
   "engines": {
@@ -51,7 +51,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.105.0",
+    "@types/vscode": "^1.100.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
