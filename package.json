@@ -2,7 +2,7 @@
   "name": "cssmoduleemmet",
   "displayName": "CssModuleEmmet",
   "description": "dic.wrap  -->  <div className={css.wrap}/>",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "icon": "images/icon.png",
   "publisher": "zhangchengyun",
   "engines": {
