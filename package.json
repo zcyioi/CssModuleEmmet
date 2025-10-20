@@ -1,8 +1,8 @@
 {
   "name": "cssmoduleemmet",
-  "displayName": "CssModuleEmmet",
-  "description": "dic.wrap  -->  <div className={css.wrap}/>",
-  "version": "1.0.4",
+  "displayName": "Css Module Emmet JSX/TSX",
+  "description": "div.wrap  -->  <div className={css.wrap}/>",
+  "version": "1.0.6",
   "icon": "images/icon.png",
   "publisher": "zhangchengyun",
   "engines": {

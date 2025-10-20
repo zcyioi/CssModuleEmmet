@@ -1,8 +1,8 @@
 
 
-# Css Module Emmet
+# Css Module Emmet JSX/TSX
 
-在 React / TSX 文件中通过 Emmet 风格语法快速生成带 className={css.xxx} 的代码结构
+在 JSX / TSX 文件中通过 Emmet 风格语法快速生成带 className={css.xxx} 的代码结构
 
 
 ## 功能介绍
@@ -10,10 +10,12 @@
 | 输入                    | 展开结果                                                                |
 | ----------------------- | ----------------------------------------------------------------------- |
 | `div.content`           | `<div className={css.content}></div>`                                   |
-| `span.title`            | `<span className={css.title}></span>`                                   |
+| `span.title.red`        | ``<span className={`${css.title} ${css.red}}`></span>``                 |
 | `div.wrapper>span.text` | `<div className={css.wrapper}><span className={css.text}></span></div>` |
 | `h1#main.title{Hello}`  | `<h1 id="main" className={css.title}>Hello</h1>`                        |
 ---
+
+
 
 ## 使用
 
@@ -38,7 +40,7 @@
 
 ```json
 {
-  "cssModuleEmmet.cssPrefix": "styles" // default :css
+  "cssModuleEmmet.cssPrefix": "module" // default :css
 }
 ```
 
@@ -78,7 +80,9 @@ div.content → <div className={styles.content}></div>
    1. 打开命令面板：
 
       Windows / Linux：Ctrl + Shift + P
+
       macOS：Cmd + Shift + P
+
       输入 “Keyboard Shortcuts (JSON)” 或 “键盘快捷方式 (JSON)”，然后回车。
 
    2. 添加自定义快捷键，例如：
