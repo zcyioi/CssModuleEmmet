@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 				const token = document.getText(range);
 				// 可选：仅在包含符号时触发
-				// if (!/[.>{+{]/.test(token)) return undefined;
+				if (!/[.>{+{]/.test(token)) return undefined;
 
 				try {
 					const ast = parseShorthand(token);
@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 					// 显示细节说明
 					previewItem.detail = 'Css Module Emmet';
-					previewItem.sortText = '\u0000'; // 让它排在最前
+					previewItem.sortText = '\u0001'; // 让它排在最前
 					previewItem.filterText = token; // 跟当前输入一致
 					previewItem.insertText = jsx; // entry 补齐
 					// ✅ 替换当前输入的范围

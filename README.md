@@ -47,7 +47,7 @@
 此时：
 
 ```
-div.content → <div className={styles.content}></div>
+div.content → <div className={module.content}></div>
 ```
 
 ## 支持语法说明
