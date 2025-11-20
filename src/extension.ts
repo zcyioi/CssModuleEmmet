@@ -7,6 +7,7 @@ function getPrefix(): string {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+
 	// ----------------------------
 	// ② 补全预览（原功能）
 	// ----------------------------
@@ -17,12 +18,17 @@ export function activate(context: vscode.ExtensionContext) {
 		],
 		{
 			provideCompletionItems(document, position) {
+				const lineText = document.lineAt(position.line).text;
+				// 避免在赋值语句中触发
+				if (lineText.includes('=')) return undefined;
+
 				const range = document.getWordRangeAtPosition(position, /[a-zA-Z0-9.#>{}_+\-:]+/);
 				if (!range) return undefined;
 
 				const token = document.getText(range);
-				// 可选：仅在包含符号时触发
-				if (!/[.>{+{]/.test(token)) return undefined;
+
+				// 仅在包含符号时触发
+				if (!/[.>#+]/.test(token)) return undefined;
 
 				try {
 					const ast = parseShorthand(token);
@@ -31,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
 					const cssPrefix = getPrefix(); // 例如返回 'css'
 					const jsx = generateJSX(ast, cssPrefix);
 
-					// ✅ 创建预览补全项
+					// 创建预览补全项
 					const previewItem = new vscode.CompletionItem(
 						token,
 						vscode.CompletionItemKind.Snippet
@@ -48,10 +54,10 @@ export function activate(context: vscode.ExtensionContext) {
 					previewItem.sortText = '\u0001'; // 让它排在最前
 					previewItem.filterText = token; // 跟当前输入一致
 					previewItem.insertText = jsx; // entry 补齐
-					// ✅ 替换当前输入的范围
+					// 替换当前输入的范围
 					previewItem.range = range;
 
-					// ✅ 返回动态补全列表（Emmet 同款）
+					// 返回动态补全列表（Emmet 同款）
 					// 第二个参数 true 表示“补全不完整”，允许动态刷新
 					return new vscode.CompletionList([previewItem], true);
 				} catch (e) {
@@ -60,7 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			},
 		},
-		// ✅ 触发字符
+		// 触发字符
 		'.', '>', '+',
 	);
 
